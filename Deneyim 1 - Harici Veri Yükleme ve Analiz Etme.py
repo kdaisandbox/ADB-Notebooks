@@ -104,7 +104,52 @@ print(dosya_adi)
 
 # COMMAND ----------
 
+from pyspark.sql.functions import *
+from pyspark.sql.types import *
 
+sema = StructType([
+    StructField("tarih", DateType(), True),
+    StructField("ORT_DOLULUK_ORANI", FloatType(), True),
+    StructField("ORT_KALAN", FloatType(), True)
+])
+
+df = (
+        spark.read
+            .format("csv")
+            .option("header", "true")
+            .schema(sema)
+            .load(dosya_adi)
+)
+
+display(df)
+
+# COMMAND ----------
+
+df2 = df \
+    .withColumn("YIL", date_format("tarih", "yyyy")) \
+    .groupBy("YIL") \
+    .avg("ORT_DOLULUK_ORANI", "ORT_KALAN") \
+    .orderBy("YIL")
+
+display(df2)
+
+# COMMAND ----------
+
+# MAGIC %md
+# MAGIC 
+# MAGIC ## Visualization aracı kullanılarak gelen sonuçlar görselleştirme
+# MAGIC 
+# MAGIC Yukarıdaki sonuç hücresinde, tablonun üzerinde yer alan Table sekmesinin yanındaki + işaretine ve sonrasında **Visualization** seçeneğine tıklanır.
+# MAGIC 
+# MAGIC <br /><img src ='https://github.com/kdaisandbox/ADB-Notebooks/blob/main/img/D1-001.png?raw=true'><br /><br />
+# MAGIC 
+# MAGIC Visualization type **Bar** olarak seçilir. X kolonu **YIL** ve Y kolonları, **Add column** tıklanarak sırasıyla **ORT_DOLULUK_ORANI** ve **ORT_KALAN** olarak seçilir. 
+# MAGIC 
+# MAGIC <br /><img src ='https://github.com/kdaisandbox/ADB-Notebooks/blob/main/img/D1-002.png?raw=true'><br /><br />
+# MAGIC 
+# MAGIC **Save**'e tıklandığında hücrenin durumu aşağıdaki gibi olmalıdır:
+# MAGIC 
+# MAGIC <br /><img src ='https://github.com/kdaisandbox/ADB-Notebooks/blob/main/img/D1-003.png?raw=true'>
 
 # COMMAND ----------
 
