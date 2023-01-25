@@ -94,6 +94,8 @@ dosya_adi = "/user/hive/warehouse/" + new_folder + "/dam_occupancy.csv"
 
 spark.conf.set('dosya.adi', dosya_adi)
 
+print(dosya_adi)
+
 # COMMAND ----------
 
 # MAGIC %md
