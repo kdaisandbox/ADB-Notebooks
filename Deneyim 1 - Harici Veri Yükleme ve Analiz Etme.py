@@ -16,7 +16,7 @@
 # MAGIC 
 # MAGIC ## Veriler için yeni klasör oluşturulması
 # MAGIC 
-# MAGIC Varsayılan klasör (default Hive metastore) içinde yeni bir klasör oluşturulur.
+# MAGIC Varsayılan klasör (default Hive metastore) içinde yeni bir klasör oluşturulur. 
 
 # COMMAND ----------
 
