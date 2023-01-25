@@ -100,7 +100,7 @@ print(dosya_adi)
 
 # MAGIC %md
 # MAGIC 
-# MAGIC ### PySpark
+# MAGIC # PySpark
 
 # COMMAND ----------
 
@@ -155,7 +155,7 @@ display(df2)
 
 # MAGIC %md
 # MAGIC 
-# MAGIC ### SQL
+# MAGIC # SQL
 # MAGIC 
 # MAGIC Öncelikle yukarıda indirilen **dam_occupancy.csv** dosyası kullanılarak **ibb_baraj_sql** adında bir tablo oluşturulur.
 # MAGIC 
