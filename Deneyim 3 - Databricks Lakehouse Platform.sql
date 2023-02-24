@@ -8,7 +8,7 @@
 -- MAGIC Bu deneyimde Databricks Lakehouse platformu üzerinde; **Delta tabloları** ile CRUD (Create - Select (Read) - Update - Delete) işlemleri, tabloların versiyonlanması, eski versiyonlara dönülmesi ve optimizasyon gibi örnekler içermektedir.
 -- MAGIC 
 -- MAGIC Örnekler **SQL** ile yazılacağından notebook'un varsayılan dili olarak **SQL** seçilmiştir.
--- MAGIC 
+-- MAGIC <br /><br />
 -- MAGIC <p>
 -- MAGIC <img src="https://raw.githubusercontent.com/kdaisandbox/ADB-Notebooks/main/img/D3-001.png" />
 -- MAGIC </p>
@@ -85,7 +85,7 @@ VALUES
 
 -- COMMAND ----------
 
-select * from employees
+SELECT * FROM employees
 
 -- COMMAND ----------
 
@@ -105,3 +105,103 @@ DESCRIBE DETAIL employees
 
 -- MAGIC %fs
 -- MAGIC ls 'dbfs:/user/hive/warehouse/employees'
+
+-- COMMAND ----------
+
+-- MAGIC %md
+-- MAGIC Tabloya ait bir adet **parquet** dosyası bulunmaktadır. Örnek olarak tablo üzerinde bir güncelleme işlemi yapılır.
+
+-- COMMAND ----------
+
+UPDATE employees
+SET salary = salary * 2
+WHERE first_name like 'D%'
+
+-- COMMAND ----------
+
+-- MAGIC %md
+-- MAGIC Adı D ile başlayan 3 kaydın **salary** bilgisnin değiştiği kontrol edilir.
+
+-- COMMAND ----------
+
+SELECT * FROM employees
+
+-- COMMAND ----------
+
+-- MAGIC %md
+-- MAGIC Bu işlemden sonra tabloya ait dosyalar kontrol edildiğinde ikinci bir **parquet** dosyasının oluştuğu görülür.
+
+-- COMMAND ----------
+
+-- MAGIC %fs
+-- MAGIC ls 'dbfs:/user/hive/warehouse/employees'
+
+-- COMMAND ----------
+
+-- MAGIC %md
+-- MAGIC **DESCRIBE HISTORY** komutuyla tablo üzerinde yapılan işlemler listelenir. Yukarıda çalıştırılan **UPDATE** komutuyla tabloda son işlem **UPDATE** işlemi olarak yer almaktadır.
+
+-- COMMAND ----------
+
+DESCRIBE HISTORY employees
+
+-- COMMAND ----------
+
+-- MAGIC %md
+-- MAGIC Bu işlemlere ait log kayıtları ise **_delta_log** klasöründe tutulmaktadır. Her bir işlem (transaction) için ayrı bir **json** dosyası oluşturulur.
+
+-- COMMAND ----------
+
+-- MAGIC %fs
+-- MAGIC ls 'dbfs:/user/hive/warehouse/employees/_delta_log'
+
+-- COMMAND ----------
+
+-- MAGIC %md
+-- MAGIC Son oluşturulan dosyanın (**....002.json**) içeriğine bakılacak olursa **"operation":"UPDATE"** bilgisiyle birlikte güncellenen kayıtların bilgisi görülebilir.
+
+-- COMMAND ----------
+
+-- MAGIC %fs head 'dbfs:/user/hive/warehouse/employees/_delta_log/00000000000000000002.json'
+
+-- COMMAND ----------
+
+-- MAGIC %md
+-- MAGIC ### Versiyonlama (Time Travel)
+
+-- COMMAND ----------
+
+-- MAGIC %md
+-- MAGIC Açıklama
+
+-- COMMAND ----------
+
+
+
+-- COMMAND ----------
+
+-- MAGIC %md
+-- MAGIC ### Optimizasyon (Optimize, Indexing)
+
+-- COMMAND ----------
+
+-- MAGIC %md
+-- MAGIC Açıklama
+
+-- COMMAND ----------
+
+
+
+-- COMMAND ----------
+
+-- MAGIC %md
+-- MAGIC ### Temizleme (Vacuum)
+
+-- COMMAND ----------
+
+-- MAGIC %md
+-- MAGIC Açıklama
+
+-- COMMAND ----------
+
+
