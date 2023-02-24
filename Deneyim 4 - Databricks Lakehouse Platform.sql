@@ -1,6 +1,6 @@
 -- Databricks notebook source
 -- MAGIC %md
--- MAGIC # Deneyim 3 - Databricks Lakehouse Platform
+-- MAGIC # Deneyim 4 - Databricks Lakehouse Platform
 
 -- COMMAND ----------
 
@@ -37,6 +37,8 @@
 
 -- COMMAND ----------
 
+DROP TABLE IF EXISTS employees;
+
 CREATE TABLE employees (
 	employee_id int
 	, first_name string
@@ -48,7 +50,7 @@ CREATE TABLE employees (
 	, salary double
 	, manager_id int
 	, department_id int
-)
+);
 
 -- COMMAND ----------
 
@@ -88,8 +90,18 @@ select * from employees
 -- COMMAND ----------
 
 -- MAGIC %md
--- MAGIC Tablo detayları
+-- MAGIC Tablo detayları incelenirse, tablo formatının **delta** olduğu ve varsayılan konumun da **dbfs:/user/hive/warehouse/metastore** olduğu görülür.
 
 -- COMMAND ----------
 
 DESCRIBE DETAIL employees
+
+-- COMMAND ----------
+
+-- MAGIC %md
+-- MAGIC Tabloya ait dosyaların listesini görmek için **%fs** magic command'i kullanılarak **employees** klasörü altındaki dosyalar listelenir.
+
+-- COMMAND ----------
+
+-- MAGIC %fs
+-- MAGIC ls 'dbfs:/user/hive/warehouse/employees'
