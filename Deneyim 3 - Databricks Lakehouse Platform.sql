@@ -84,3 +84,12 @@ VALUES
 -- COMMAND ----------
 
 select * from employees
+
+-- COMMAND ----------
+
+-- MAGIC %md
+-- MAGIC Tablo detayları
+
+-- COMMAND ----------
+
+DESCRIBE DETAIL employees
