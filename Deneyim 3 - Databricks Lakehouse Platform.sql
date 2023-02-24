@@ -1,6 +1,6 @@
 -- Databricks notebook source
 -- MAGIC %md
--- MAGIC # Deneyim 4 - Databricks Lakehouse Platform
+-- MAGIC # Deneyim 3 - Databricks Lakehouse Platform
 
 -- COMMAND ----------
 
