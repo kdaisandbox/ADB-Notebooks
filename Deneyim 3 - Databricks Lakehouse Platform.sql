@@ -90,7 +90,7 @@ SELECT * FROM employees
 -- COMMAND ----------
 
 -- MAGIC %md
--- MAGIC Tablo detayları incelenirse, tablo formatının **delta** olduğu ve varsayılan konumun da **dbfs:/user/hive/warehouse/metastore** olduğu görülür.
+-- MAGIC Tablo detayları incelenirse, tablo formatının **delta** olduğu ve varsayılan konumun da **dbfs:/user/hive/warehouse/metastore** olduğu görülür. Dtabaricks'te yukarıdaki şekilde oluşturulah tablolar varsayılan olarak Delta  tablosudur ve varsayılan konumu **dbfs:/user/hive/warehouse/metastore** klasörüdür.
 
 -- COMMAND ----------
 
@@ -172,11 +172,21 @@ DESCRIBE HISTORY employees
 -- COMMAND ----------
 
 -- MAGIC %md
--- MAGIC Açıklama
+-- MAGIC **employees** tablosu üzerinde yapılan son işlem UPDATE işlemiydi. Bu işlemi geri almak ya da tablonun bu güncelleme işlemi öncesindeki haline dönmek istendiğinde **time travel** özelliği kullanılarak istenen sürüme dönebilmek mümkündür.
 
 -- COMMAND ----------
 
+DESCRIBE HISTORY employees
 
+-- COMMAND ----------
+
+-- MAGIC %md
+-- MAGIC **version** kolonunda yer alan versiyon numaralarını aşağıdaki sorguya vererek hangi adıma dönmek isteniyorsa tablonun o anki görüntüsü sorgulanabilir. Örneğin, tablonun 1. versiyonuna aşağıdaki ifadeyle sorgulanabilir.
+
+-- COMMAND ----------
+
+SELECT * 
+FROM employees VERSION AS OF 1
 
 -- COMMAND ----------
 
