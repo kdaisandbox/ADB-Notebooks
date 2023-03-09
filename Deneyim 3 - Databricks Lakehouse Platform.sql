@@ -263,10 +263,6 @@ DESCRIBE HISTORY employees
 
 -- COMMAND ----------
 
-DESCRIBE DETAIL employees
-
--- COMMAND ----------
-
 OPTIMIZE employees
 ZORDER BY employee_id
 
