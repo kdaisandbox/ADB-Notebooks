@@ -181,12 +181,75 @@ DESCRIBE HISTORY employees
 -- COMMAND ----------
 
 -- MAGIC %md
--- MAGIC **version** kolonunda yer alan versiyon numaralarını aşağıdaki sorguya vererek hangi adıma dönmek isteniyorsa tablonun o anki görüntüsü sorgulanabilir. Örneğin, tablonun 1. versiyonuna aşağıdaki ifadeyle sorgulanabilir.
+-- MAGIC **version** kolonunda yer alan versiyon numaralarını belirterek hangi adıma dönmek isteniyorsa tablonun o anki görüntüsü sorgulanabilir. Aşağıdaki örnek **employees** tablosunun 1. versiyonunu sorgulamaktadır.
 
 -- COMMAND ----------
 
 SELECT * 
 FROM employees VERSION AS OF 1
+
+-- COMMAND ----------
+
+-- MAGIC %md
+-- MAGIC Aynı sorgu, versiyon bilgisini @ işaretinden sonra belirterek de yazılabilir.
+
+-- COMMAND ----------
+
+SELECT * FROM employees@v1
+
+-- COMMAND ----------
+
+-- MAGIC %md
+-- MAGIC Tablo üzerinde yeni bir işlem yapılır. Bu işlemden sonra tablonun yeni bir versiyonu oluştuğu görülecektir.
+
+-- COMMAND ----------
+
+DELETE FROM employees
+
+-- COMMAND ----------
+
+-- MAGIC %md
+-- MAGIC Tablodaki bütün kayıtlar silindiği için sorgulandığında herhangi bir sonuç dönmediği görülecektir.
+
+-- COMMAND ----------
+
+SELECT * FROM employees
+
+-- COMMAND ----------
+
+-- MAGIC %md
+-- MAGIC Tablo geçmişine bakıldığında DELETE işleminin 3. versiyon olarak eklendiği görülür.
+
+-- COMMAND ----------
+
+DESCRIBE HISTORY employees
+
+-- COMMAND ----------
+
+-- MAGIC %md
+-- MAGIC Tabloyu **DELETE** işleminden önceki hale döndürmek için **RESTORE TABLE** komutu kullanılır. DELETE işleminden bir önceki adımdaki (UPDATE) hale geri döndürmek için aşağıdaki kod çalıştırılır:
+
+-- COMMAND ----------
+
+  RESTORE TABLE employees TO VERSION AS OF 2 
+
+-- COMMAND ----------
+
+-- MAGIC %md
+-- MAGIC Tablo artık eski haline döndüğü için kayıtlar geri gelecektir.
+
+-- COMMAND ----------
+
+SELECT * FROM employees
+
+-- COMMAND ----------
+
+-- MAGIC %md
+-- MAGIC **RESTORE** işlemi de tablo üzerinde yapılan yeni bir işlem olduğundan **DESCRIBE HISTORY** komutuyla kontrol edildiğinde, bu işlem 4. versiyon olarak eklendiği görülecektir.
+
+-- COMMAND ----------
+
+DESCRIBE HISTORY employees
 
 -- COMMAND ----------
 
@@ -200,7 +263,20 @@ FROM employees VERSION AS OF 1
 
 -- COMMAND ----------
 
+DESCRIBE DETAIL employees
 
+-- COMMAND ----------
+
+OPTIMIZE employees
+ZORDER BY employee_id
+
+-- COMMAND ----------
+
+DESCRIBE DETAIL employees
+
+-- COMMAND ----------
+
+DESCRIBE HISTORY employees
 
 -- COMMAND ----------
 
