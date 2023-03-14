@@ -1,7 +1,7 @@
 # Databricks notebook source
 # MAGIC %md
 # MAGIC 
-# MAGIC # Deneyim 1 - Harici Veri Yükleme ve Analiz Etme
+# MAGIC # DATABRICKS001 - Load and Analyze External Data
 
 # COMMAND ----------
 
