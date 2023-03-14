@@ -1,13 +1,13 @@
 -- Databricks notebook source
 -- MAGIC %md
--- MAGIC # Deneyim 3 - Databricks Lakehouse Platform
+-- MAGIC # DATABRICKS003 - Databricks Lakehouse Platform
 
 -- COMMAND ----------
 
 -- MAGIC %md
--- MAGIC Bu deneyimde Databricks Lakehouse platformu üzerinde; **Delta tabloları** ile CRUD (Create - Select (Read) - Update - Delete) işlemleri, tabloların versiyonlanması, eski versiyonlara dönülmesi ve optimizasyon gibi örnekler içermektedir.
+-- MAGIC This experience will introduce Databricks Lakehouse platform, using examples for CRUD (Create - Select (Read) - Update - Delete) operations, versioning (time travel) and optimization.
 -- MAGIC 
--- MAGIC Örnekler **SQL** ile yazılacağından notebook'un varsayılan dili olarak **SQL** seçilmiştir.
+-- MAGIC Since all examples are SQL expressions, the default language of notebook has been switched to **SQL**.
 -- MAGIC <br /><br />
 -- MAGIC <p>
 -- MAGIC <img src="https://raw.githubusercontent.com/kdaisandbox/ADB-Notebooks/main/img/D3-001.png" />
@@ -16,12 +16,12 @@
 -- COMMAND ----------
 
 -- MAGIC %md
--- MAGIC ### Tablo oluşturma, kayıt ekleme ve sorgulama ###
+-- MAGIC ### Create, Insert and Select a Table ###
 
 -- COMMAND ----------
 
 -- MAGIC %md
--- MAGIC Örneklerde kullanılmak üzere, aşağıdaki kolonlara sahip **employees** adında bir tablo oluşturulur:
+-- MAGIC We'll be using an **employee** table which has following columns:
 -- MAGIC <br /><br />
 -- MAGIC <ul>
 -- MAGIC   <li>employee_id</li>
@@ -34,6 +34,8 @@
 -- MAGIC   <li>salary,manager_id</li>
 -- MAGIC   <li>department_id</li>
 -- MAGIC </ul>
+-- MAGIC 
+-- MAGIC Here's the **CREATE** script for the table:
 
 -- COMMAND ----------
 
@@ -55,7 +57,7 @@ CREATE TABLE employees (
 -- COMMAND ----------
 
 -- MAGIC %md
--- MAGIC Employees tablosuna örnek kayıtlar eklenir.
+-- MAGIC Insert some records to **employee** table:
 
 -- COMMAND ----------
 
@@ -81,7 +83,7 @@ VALUES
 -- COMMAND ----------
 
 -- MAGIC %md
--- MAGIC Eklenen kayıtlar kontrol edilir.
+-- MAGIC We can query the table to see if all the records were properly inserted.
 
 -- COMMAND ----------
 
@@ -90,7 +92,7 @@ SELECT * FROM employees
 -- COMMAND ----------
 
 -- MAGIC %md
--- MAGIC Tablo detayları incelenirse, tablo formatının **delta** olduğu ve varsayılan konumun da **dbfs:/user/hive/warehouse/metastore** olduğu görülür. Dtabaricks'te yukarıdaki şekilde oluşturulah tablolar varsayılan olarak Delta  tablosudur ve varsayılan konumu **dbfs:/user/hive/warehouse/metastore** klasörüdür.
+-- MAGIC If we look at the details of the table, we can see that the table format is **Delta** and the default location is **dbfs:/user/hive/warehouse/metastore**. All tables created in Databricks are **Delta tables** by default and all tables were stored in **dbfs:/user/hive/warehouse/metastore** folder.
 
 -- COMMAND ----------
 
@@ -99,7 +101,7 @@ DESCRIBE DETAIL employees
 -- COMMAND ----------
 
 -- MAGIC %md
--- MAGIC Tabloya ait dosyaların listesini görmek için **%fs** magic command'i kullanılarak **employees** klasörü altındaki dosyalar listelenir.
+-- MAGIC By using **%fs** magic command, we can use command line within the notebook. The command below lists the files under the **employees** folder.
 
 -- COMMAND ----------
 
@@ -109,7 +111,7 @@ DESCRIBE DETAIL employees
 -- COMMAND ----------
 
 -- MAGIC %md
--- MAGIC Tabloya ait bir adet **parquet** dosyası bulunmaktadır. Örnek olarak tablo üzerinde bir güncelleme işlemi yapılır.
+-- MAGIC There is one **parquet** file for the table for now. Let's make some changes on the table:
 
 -- COMMAND ----------
 
@@ -120,7 +122,7 @@ WHERE first_name like 'D%'
 -- COMMAND ----------
 
 -- MAGIC %md
--- MAGIC Adı D ile başlayan 3 kaydın **salary** bilgisnin değiştiği kontrol edilir.
+-- MAGIC Check the **salary** value has been updates for 3 records (name starting with D).
 
 -- COMMAND ----------
 
@@ -129,7 +131,7 @@ SELECT * FROM employees
 -- COMMAND ----------
 
 -- MAGIC %md
--- MAGIC Bu işlemden sonra tabloya ait dosyalar kontrol edildiğinde ikinci bir **parquet** dosyasının oluştuğu görülür.
+-- MAGIC If we check the table files again, we can see that there's a new **parquet** file is added to the folder.
 
 -- COMMAND ----------
 
@@ -139,7 +141,7 @@ SELECT * FROM employees
 -- COMMAND ----------
 
 -- MAGIC %md
--- MAGIC **DESCRIBE HISTORY** komutuyla tablo üzerinde yapılan işlemler listelenir. Yukarıda çalıştırılan **UPDATE** komutuyla tabloda son işlem **UPDATE** işlemi olarak yer almaktadır.
+-- MAGIC List the operations that has been made on the table suing **DESCRIBE HISTORY** command and see the **UPDATE** operation as the last one.
 
 -- COMMAND ----------
 
