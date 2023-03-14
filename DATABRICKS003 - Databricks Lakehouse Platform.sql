@@ -21,7 +21,7 @@
 -- COMMAND ----------
 
 -- MAGIC %md
--- MAGIC We'll be using an **employee** table which has following columns:
+-- MAGIC We'll be using an **employees** table which has following columns:
 -- MAGIC <br /><br />
 -- MAGIC <ul>
 -- MAGIC   <li>employee_id</li>
@@ -57,7 +57,7 @@ CREATE TABLE employees (
 -- COMMAND ----------
 
 -- MAGIC %md
--- MAGIC Insert some records to **employee** table:
+-- MAGIC Insert some records to **employees** table:
 
 -- COMMAND ----------
 
@@ -150,7 +150,7 @@ DESCRIBE HISTORY employees
 -- COMMAND ----------
 
 -- MAGIC %md
--- MAGIC Bu işlemlere ait log kayıtları ise **_delta_log** klasöründe tutulmaktadır. Her bir işlem (transaction) için ayrı bir **json** dosyası oluşturulur.
+-- MAGIC Logs of these operations resides in **_delta_log** folder. Also, a **json** file is generated for every transaction.
 
 -- COMMAND ----------
 
@@ -160,7 +160,7 @@ DESCRIBE HISTORY employees
 -- COMMAND ----------
 
 -- MAGIC %md
--- MAGIC Son oluşturulan dosyanın (**....002.json**) içeriğine bakılacak olursa **"operation":"UPDATE"** bilgisiyle birlikte güncellenen kayıtların bilgisi görülebilir.
+-- MAGIC By viewing the content of the last json file (**....002.json**), updated records can bee seen with **"operation":"UPDATE"** information.
 
 -- COMMAND ----------
 
@@ -169,12 +169,12 @@ DESCRIBE HISTORY employees
 -- COMMAND ----------
 
 -- MAGIC %md
--- MAGIC ### Versiyonlama (Time Travel)
+-- MAGIC ### Versioning (Time Travel)
 
 -- COMMAND ----------
 
 -- MAGIC %md
--- MAGIC **employees** tablosu üzerinde yapılan son işlem UPDATE işlemiydi. Bu işlemi geri almak ya da tablonun bu güncelleme işlemi öncesindeki haline dönmek istendiğinde **time travel** özelliği kullanılarak istenen sürüme dönebilmek mümkündür.
+-- MAGIC The last operation on **employees** table was **UPDATE**. If we want to rollback this operation or return to the older version of the table, we can use **time travel** feature.
 
 -- COMMAND ----------
 
@@ -183,7 +183,7 @@ DESCRIBE HISTORY employees
 -- COMMAND ----------
 
 -- MAGIC %md
--- MAGIC **version** kolonunda yer alan versiyon numaralarını belirterek hangi adıma dönmek isteniyorsa tablonun o anki görüntüsü sorgulanabilir. Aşağıdaki örnek **employees** tablosunun 1. versiyonunu sorgulamaktadır.
+-- MAGIC It's possible to go back to any version (snapshot) of the table by identifying the number in **version** column. The query below brings back the first version of the table:
 
 -- COMMAND ----------
 
@@ -193,7 +193,7 @@ FROM employees VERSION AS OF 1
 -- COMMAND ----------
 
 -- MAGIC %md
--- MAGIC Aynı sorgu, versiyon bilgisini @ işaretinden sonra belirterek de yazılabilir.
+-- MAGIC The same query can be written with **@+version**.
 
 -- COMMAND ----------
 
@@ -202,7 +202,7 @@ SELECT * FROM employees@v1
 -- COMMAND ----------
 
 -- MAGIC %md
--- MAGIC Tablo üzerinde yeni bir işlem yapılır. Bu işlemden sonra tablonun yeni bir versiyonu oluştuğu görülecektir.
+-- MAGIC Perform another operation on the table (here, it is **delete**) and check a new version is generated.
 
 -- COMMAND ----------
 
@@ -211,7 +211,7 @@ DELETE FROM employees
 -- COMMAND ----------
 
 -- MAGIC %md
--- MAGIC Tablodaki bütün kayıtlar silindiği için sorgulandığında herhangi bir sonuç dönmediği görülecektir.
+-- MAGIC No results returns since all rows has been deleted.
 
 -- COMMAND ----------
 
@@ -220,7 +220,7 @@ SELECT * FROM employees
 -- COMMAND ----------
 
 -- MAGIC %md
--- MAGIC Tablo geçmişine bakıldığında DELETE işleminin 3. versiyon olarak eklendiği görülür.
+-- MAGIC View table history and check **DELETE** opration is added as 3rd version.
 
 -- COMMAND ----------
 
@@ -229,7 +229,7 @@ DESCRIBE HISTORY employees
 -- COMMAND ----------
 
 -- MAGIC %md
--- MAGIC Tabloyu **DELETE** işleminden önceki hale döndürmek için **RESTORE TABLE** komutu kullanılır. DELETE işleminden bir önceki adımdaki (UPDATE) hale geri döndürmek için aşağıdaki kod çalıştırılır:
+-- MAGIC **RESTORE TABLE** command is used to return table back to the previous versions. Here's the code for going back to the version where UPDATE was performed:
 
 -- COMMAND ----------
 
@@ -238,7 +238,7 @@ DESCRIBE HISTORY employees
 -- COMMAND ----------
 
 -- MAGIC %md
--- MAGIC Tablo artık eski haline döndüğü için kayıtlar geri gelecektir.
+-- MAGIC All records will be back as it was in the previous version.
 
 -- COMMAND ----------
 
@@ -247,7 +247,7 @@ SELECT * FROM employees
 -- COMMAND ----------
 
 -- MAGIC %md
--- MAGIC **RESTORE** işlemi de tablo üzerinde yapılan yeni bir işlem olduğundan **DESCRIBE HISTORY** komutuyla kontrol edildiğinde, bu işlem 4. versiyon olarak eklendiği görülecektir.
+-- MAGIC **RESTORE TABLE** is also a new operation on the table. So, we can see this step as version 4 if we check the history.
 
 -- COMMAND ----------
 
@@ -256,17 +256,24 @@ DESCRIBE HISTORY employees
 -- COMMAND ----------
 
 -- MAGIC %md
--- MAGIC ### Optimizasyon (Optimize, Indexing)
+-- MAGIC ### Optimization (Optimize, Indexing)
 
 -- COMMAND ----------
 
 -- MAGIC %md
--- MAGIC Açıklama
+-- MAGIC If we would like to increase the performance of our queries, we can use **ZORDER BY** clause, which orders rows by the column specified, alongside **OPTIMIZE** command.
+-- MAGIC 
+-- MAGIC In this example, our **employees** table is not big enough to see the increase. Anyway, usage of this expression is as follows:
 
 -- COMMAND ----------
 
 OPTIMIZE employees
 ZORDER BY employee_id
+
+-- COMMAND ----------
+
+-- MAGIC %md
+-- MAGIC We can check the details and history after this operation as well.
 
 -- COMMAND ----------
 
@@ -279,7 +286,7 @@ DESCRIBE HISTORY employees
 -- COMMAND ----------
 
 -- MAGIC %md
--- MAGIC ### Temizleme (Vacuum)
+-- MAGIC ### Clean Files (Vacuum)
 
 -- COMMAND ----------
 
