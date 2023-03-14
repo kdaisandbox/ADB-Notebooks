@@ -1,6 +1,6 @@
 # Databricks notebook source
 # MAGIC %md
-# MAGIC # Deneyim 2 - Harici Veri Yükleme (AWS S3)
+# MAGIC # DATABRICKS002 - Load External Data (AWS S3)
 
 # COMMAND ----------
 
