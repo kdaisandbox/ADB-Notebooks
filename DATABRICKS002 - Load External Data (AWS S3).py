@@ -6,9 +6,9 @@
 
 # MAGIC %md
 # MAGIC Bu deneyimde örnek bir veri setinin, **AWS S3 bucket**'tan **Databricks** dosya sistemi üzerine alınması ve **mount** edilmesi anlatılacaktır. 
-# MAGIC 
+# MAGIC
 # MAGIC Örnek olarak **Yıllara göre Türkiye'nin dış borç miktarları** veri seti kullanılacaktır.
-# MAGIC 
+# MAGIC
 # MAGIC İlk olarak AIVerse örnek veri setlerinin olduğu klasörü Databricks üzerinde **mount** edilmesi gerekir. Önce mevcut klasörler varsa onları temizlemek için **dbutils.fs.unmount()** komutu çalıştırılır.
 
 # COMMAND ----------
@@ -25,7 +25,7 @@ if any(mount.mountPoint == "/mnt/aiverse-sample-data" for mount in dbutils.fs.mo
 
 aws_bucket_name = "aiverse-sample-data-files"
 mount_name = "aiverse-sample-data"
-dbutils.fs.mount("s3a://%s" % aws_bucket_name, "/mnt/%s" % mount_name)
+dbutils.fs.mount("s3a://aiverse-sample-data-files/csv", "/mnt/%s" % mount_name)
 
 # COMMAND ----------
 
@@ -67,7 +67,7 @@ display(df)
 
 # MAGIC %md
 # MAGIC Burada dikkat edilirse ilk satırda standart dışı değerler geldiği görülecektir. **.option("header", True)** parametresi kullanılarak ilk satırın başlık satırı olduğu belirtilse de dosyada fazladan bir satır daha bulunmaktadır.
-# MAGIC 
+# MAGIC
 # MAGIC Bu satırı atlayıp diğer satırdan devam etmek için **.option("skipRows", 1)** parametresi **spark.read** metoduna eklenirse sorunun düzeldiği görülecektir.
 
 # COMMAND ----------

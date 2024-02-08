@@ -9,4 +9,10 @@ customers = spark.read.csv("dbfs:/databricks-datasets/retail-org/customers/", he
 
 # COMMAND ----------
 
-customers.write.format("delta").mode("overwrite").saveAsTable("catalog_1.test.customers_bronze")
+customers.write.format("delta").mode("overwrite").saveAsTable("katalog.sema.customers_bronze")
+
+# COMMAND ----------
+
+# MAGIC %sql
+# MAGIC
+# MAGIC select * from katalog.sema.customers_bronze

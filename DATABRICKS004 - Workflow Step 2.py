@@ -7,10 +7,15 @@ df.write.mode("overwrite").parquet("/tmp/customer_building_output.parquet")
 
 # COMMAND ----------
 
-dbutils.fs.rm("dbfs:/tmp/customer_building_output.parquet", True)
+# MAGIC %fs
+# MAGIC
+# MAGIC ls "dbfs:/tmp/customer_building_output.parquet"
 
 # COMMAND ----------
 
-# MAGIC %fs
+# MAGIC %sql
 # MAGIC
-# MAGIC ls "dbfs:/tmp"
+# MAGIC create or replace table catalog_1.test.customer_building_table
+# MAGIC as
+# MAGIC select *
+# MAGIC from hive_metastore.default.customer_building
